@@ -1,24 +1,12 @@
-# README
+sokoban
+=======
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+メモ
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- front
+    - sokoban クローン
+    - エディタ
+- back
+    - 問題共有
+    - 答え合わせ
+    - 答えがないものは公開できない
