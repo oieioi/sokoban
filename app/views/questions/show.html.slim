@@ -1,4 +1,2 @@
-<p id="notice"><%= notice %></p>
-
-<%= link_to 'Edit', edit_question_path(@question) %> |
-<%= link_to 'Back', questions_path %>
+= javascript_pack_tag 'application'
+= react_component 'Question', @question
