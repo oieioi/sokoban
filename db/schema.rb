@@ -10,9 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 2018_07_23_091007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "questions", force: :cascade do |t|
+    t.string "name", null: false, comment: "title"
+    t.string "description", comment: "ヒント"
+    t.string "map", null: false, comment: "マップ"
+    t.bigint "user_id", null: false, comment: "出題者"
+    t.boolean "published", default: false, null: false, comment: "公開済みか"
+    t.boolean "solved", default: false, null: false, comment: "解かれているか"
+    t.string "answer", comment: "模範回答"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_questions_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "provider", null: false
+    t.string "uid", null: false
+    t.string "name"
+    t.string "image_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "questions", "users"
 end
