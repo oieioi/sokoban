@@ -1,5 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
+import Map from "./Map"
 
 class Question extends React.Component {
   render () {
@@ -7,14 +8,15 @@ class Question extends React.Component {
       <React.Fragment>
         id: {this.props.id},
         name: {this.props.name},
-        map: {this.props.map}
+        <Map
+          map={this.props.map} />
       </React.Fragment>
     );
   }
 }
 
 Question.propTypes = {
-  id: PropTypes.string,
+  id: PropTypes.number,
   map: PropTypes.string
 };
 export default Question
