@@ -1,4 +1,4 @@
 section
   - @questions.each do |q|
     article
-      span = q.name
+      = link_to "#{q.name} by #{q.user.name}", question_path(q)
