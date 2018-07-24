@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_many :questions
 
+  # omniauth
   def self.find_or_create_from_auth(auth)
     provider = auth[:provider]
     uid = auth[:uid]

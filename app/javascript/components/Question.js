@@ -17,6 +17,7 @@ class Question extends React.Component {
 
 Question.propTypes = {
   id: PropTypes.number,
-  map: PropTypes.string
+  map: PropTypes.string,
+  name: PropTypes.string,
 };
 export default Question

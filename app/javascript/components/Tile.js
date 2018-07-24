@@ -1,5 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
+import TILES from '../const/TileConst'
 
 class Tile extends React.Component {
 
@@ -17,10 +18,14 @@ class Tile extends React.Component {
   }
 
   getView (tile) {
-    if (tile === 'e') return '⬜️';
-    if (tile === 'p') return '👶';
-    if (tile === 'b') return '🐶';
-    if (tile === 'r') return '⬛️';
+    switch(tile) {
+      case TILES.BOX: return '📦';
+      case TILES.EMPTY: return '⬜️';
+      case TILES.PLAYER: return '🤔';
+      case TILES.RIGHT_PLACE: return '✨';
+      case TILES.WALL: return '⬛️';
+      default: throw new Error('bad tile:' + tile);
+    }
   }
 }
 

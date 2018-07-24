@@ -2,23 +2,13 @@ import React from "react"
 import PropTypes from "prop-types"
 import Line from "./Line"
 import Player from "./Player"
-
-
-const ITEM = {
-  EMPTY: 'e',
-  NEW_LINE: 'n',
-  PLAYER: 'p',
-  BOX: 'b',
-  RIGHT_PLACE: 'r',
-}
+import TILES from "../const/TileConst"
 
 class Map extends React.Component {
 
   constructor (props){
     super(props);
     this.state = {
-      x: 0,
-      y: 0,
       map: [],
     }
   }
@@ -27,7 +17,6 @@ class Map extends React.Component {
     const map = this.toArray(this.props.map);
     this.setState(Object.assign(this.state, {map}));
   }
-
 
   render () {
     const lines = this.state.map.map( tiles => <Line tiles={tiles} />);
@@ -39,13 +28,13 @@ class Map extends React.Component {
   }
 
   /**
-   * @param {Stirng} mapString e-> empty, n-> new line, p-> player, b-> box, f-> fixed
+   * @param {Stirng} mapString raw map
    */
   toArray (mapString) {
     const ary = [];
     let lineCount = 0;
     mapString.split('').forEach(s => {
-      if (s === ITEM.NEW_LINE) {
+      if (s === TILES.NEW_LINE) {
         lineCount++;
         return;
       }
@@ -59,6 +48,7 @@ class Map extends React.Component {
 }
 
 Map.propTypes = {
+  map: PropTypes.string
 };
 
 export default Map
