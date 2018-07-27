@@ -26,21 +26,20 @@ class Question < ApplicationRecord
       }
   end
 
-  def point(x:, y:, **)
+  def tile(x:, y:, **)
     line = map2array[y]
     line.try(:[], x)
   end
 
-  # 上の座標を返す
   def up_point(x:, y:, **)
     {x: x, y: y - 1}
   end
 
-  def down_point(x:, y:)
+  def down_point(x:, y:, **)
     {x: x, y: y + 1}
   end
 
-  def right_point(x:, y:)
+  def right_point(x:, y:, **)
     {x: x + 1, y: y}
   end
 
@@ -54,25 +53,45 @@ class Question < ApplicationRecord
     {x: x, y: y}
   end
 
-  def player_move_up!
-    if player_can_up?
-      old_player = {movable: TILES[:empty]}.merge player_point
-      new_player = {movable: TILES[:player]}.merge up_point(player_point)
-      move!(old_player)
-      move!(new_player)
-    elsif player_can_push_up?
-      current_player = {movable: TILES[:empty]}.merge player_point
-      box = {movable: TILES[:player]}.merge up_point(current_player)
-      new_box = {movable: TILES[:box]}.merge up_point(box)
-      move!(current_player)
-      move!(box)
-      move!(new_box)
-    else
-      nil
+  %w[up down right left].each do |direction|
+    define_method "player_move_#{direction}!" do
+      if send("player_can_#{direction}?")
+        current_player = {movable: TILES[:empty]}.merge player_point
+        new_player = {movable: TILES[:player]}.merge send("#{direction}_point", player_point)
+        replace!(current_player)
+        replace!(new_player)
+      elsif send("player_can_push_#{direction}?")
+        current_player = {movable: TILES[:empty]}.merge player_point
+        box = {movable: TILES[:player]}.merge send("#{direction}_point", current_player)
+        new_box = {movable: TILES[:box]}.merge send("#{direction}_point", box)
+        replace!(current_player)
+        replace!(box)
+        replace!(new_box)
+      else
+        nil
+      end
+    end
+
+    # その方向に進めるか
+    define_method "player_can_#{direction}?" do
+      tile = tile(send("#{direction}_point", player_point))
+      return tile == TILES[:empty]
+    end
+
+    # 押せるか
+    define_method "player_can_push_#{direction}?" do
+      tile = tile(send("#{direction}_point", player_point))
+      # boxの上がempty, right_placeならok
+      if tile == TILES[:box]
+        next_tile = tile(send("#{direction}_point", send("#{direction}_point", player_point)))
+        result = [TILES[:empty], TILES[:right_place]].include?(next_tile)
+        return result
+      end
+      false
     end
   end
 
-  def move!(x:, y:, movable:)
+  def replace!(x:, y:, movable:)
     map = map2array
     map[y][x] = movable
     map
@@ -86,27 +105,10 @@ class Question < ApplicationRecord
     nil
   end
 
-  def player_can_up?
-    tile = point(up_point(player_point))
-    return tile == TILES[:empty]
-  end
-
-  # box がある場合の判定
-  def player_can_push_up?
-    tile = point(up_point(player_point))
-    # boxの上がempty, right_placeならok
-    if tile == TILES[:box]
-      next_tile = point(up_point(up_point(player_point)))
-      result = [TILES[:empty], TILES[:right_place]].include?(next_tile)
-      return result
-    end
-    false
-  end
-
   private
 
   def validate_map
-    # 
+    # TODO
     return true
   end
 end
