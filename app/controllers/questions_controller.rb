@@ -56,5 +56,7 @@ class QuestionsController < ApplicationController
 
     def question_params
       params.fetch(:question, {})
+        .permit(:map, :name)
+        .merge(user: current_user)
     end
 end

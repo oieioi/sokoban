@@ -3,6 +3,7 @@ class Question < ApplicationRecord
   validates :name, presence: true
   validates :map, presence: true
   validate :validate_map
+  before_validation :sanitize_map
 
   # TODO enum
   TILES = {
@@ -54,8 +55,8 @@ class Question < ApplicationRecord
   end
 
   %w[up down right left].each do |direction|
-    define_method "player_move_#{direction}!" do
-      if send("player_can_#{direction}?")
+    define_method "move_#{direction}!" do
+      if send("player_can_move_#{direction}?")
         current_player = {movable: TILES[:empty]}.merge player_point
         new_player = {movable: TILES[:player]}.merge send("#{direction}_point", player_point)
         replace!(current_player)
@@ -73,7 +74,7 @@ class Question < ApplicationRecord
     end
 
     # その方向に進めるか
-    define_method "player_can_#{direction}?" do
+    define_method "player_can_move_#{direction}?" do
       tile = tile(send("#{direction}_point", player_point))
       return tile == TILES[:empty]
     end
@@ -110,5 +111,10 @@ class Question < ApplicationRecord
   def validate_map
     # TODO
     return true
+  end
+
+  def sanitize_map
+    map.gsub!(/\r/, '')
+      .gsub!(/\n/, 'n')
   end
 end
