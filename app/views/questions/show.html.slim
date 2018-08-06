@@ -1,6 +1,6 @@
 section class="questions"
   = javascript_pack_tag 'application'
   = react_component 'Question', @question
-  = if @question.user_id == current_user.id
+  - if @question.user_id == current_user.id
     = link_to 'edit', edit_question_path(@question)
 

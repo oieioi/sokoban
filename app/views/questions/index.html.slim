@@ -1,4 +1,4 @@
-section
+section class="questions"
   - @questions.each do |q|
     article
       = link_to "#{q.name} by #{q.user.name}", question_path(q)
