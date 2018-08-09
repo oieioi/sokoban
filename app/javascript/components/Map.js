@@ -2,49 +2,41 @@ import React from "react"
 import PropTypes from "prop-types"
 import Line from "./Line"
 import Player from "./Player"
-import TILES from "../const/TileConst"
+import MapModel from '../models/Map'
 
 class Map extends React.Component {
 
   constructor (props){
     super(props);
     this.state = {
-      map: [],
+      map: new MapModel({map: props.map})
     }
   }
 
-  componentDidMount() {
-    const map = this.toArray(this.props.map);
-    this.setState(Object.assign(this.state, {map}));
-  }
-
   render () {
-    const lines = this.state.map.map( tiles => <Line tiles={tiles} />);
+    const lines = this.state.map.toArray().map((tiles, index) => <Line tiles={tiles} key={index} />);
     return (
-      <div>
-        {lines}
-      </div>
+      <section>
+        <div>
+          {lines}
+        </div>
+        <div className="controller">
+          <button onClick={this.up.bind(this)}>up↑</button>
+          <button onClick={this.down}>donw↓</button>
+          <button onClick={this.right}>right→</button>
+          <button onClick={this.left}>left←</button>
+        </div>
+      </section>
     );
   }
 
-  /**
-   * @param {Stirng} mapString raw map
-   */
-  toArray (mapString) {
-    const ary = [];
-    let lineCount = 0;
-    mapString.split('').forEach(s => {
-      if (s === TILES.NEW_LINE) {
-        lineCount++;
-        return;
-      }
-      if (ary[lineCount] == null) {
-        ary[lineCount] = [];
-      }
-      ary[lineCount].push(s);
-    });
-    return ary;
+
+  up(){
+    this.setState({map: this.state.map.up()});
   }
+  donw(){ alert('k') }
+  right(){ alert('l') }
+  left(){ alert('h') }
 }
 
 Map.propTypes = {

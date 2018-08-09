@@ -9,7 +9,7 @@ class Line extends React.Component {
   }
 
   render () {
-    const tiles = this.props.tiles.map( t => <Tile tile={t} />);
+    const tiles = this.props.tiles.map((t, index) => <Tile tile={t} key={index} />);
     return (
       <div>
         {tiles}
