@@ -2,3 +2,5 @@ section class="questions"
   - @questions.each do |q|
     article
       = link_to "#{q.name} by #{q.user.name}", question_path(q)
+  - if current_user.present?
+    = link_to 'create question!', new_question_path
