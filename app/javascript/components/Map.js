@@ -22,9 +22,9 @@ class Map extends React.Component {
         </div>
         <div className="controller">
           <button onClick={this.up.bind(this)}>up↑</button>
-          <button onClick={this.down}>donw↓</button>
-          <button onClick={this.right}>right→</button>
-          <button onClick={this.left}>left←</button>
+          <button onClick={this.down.bind(this)}>donw↓</button>
+          <button onClick={this.right.bind(this)}>right→</button>
+          <button onClick={this.left.bind(this)}>left←</button>
         </div>
       </section>
     );
@@ -34,9 +34,15 @@ class Map extends React.Component {
   up(){
     this.setState({map: this.state.map.up()});
   }
-  donw(){ alert('k') }
-  right(){ alert('l') }
-  left(){ alert('h') }
+  down(){
+    this.setState({map: this.state.map.down()});
+  }
+  right(){
+    this.setState({map: this.state.map.right()});
+  }
+  left(){
+    this.setState({map: this.state.map.left()});
+  }
 }
 
 Map.propTypes = {

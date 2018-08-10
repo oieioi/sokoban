@@ -1,15 +1,15 @@
 import { Record, List } from 'immutable';
 import TILES from "../const/TileConst"
 
-export default class Map extends Record({map: '', playerX: null, playerY: null}) {
+export default class Map extends Record({map: '', previous: TILES.EMPTY}) {
 
   up() {
     if (!this.canMoveUp()) {
       return this;
     }
 
-    const newMap = this.playerMoveUp();
-    return this.set("map", this.toString(newMap))
+    const [newMap, previous] = this.playerMoveUp();
+    return this.set('map', this.toString(newMap)).set('previous', previous)
   }
 
   down() {
@@ -18,9 +18,8 @@ export default class Map extends Record({map: '', playerX: null, playerY: null})
       return this;
     }
 
-    const newMap = this.playerMoveDown();
-    return this.set("map", this.toString(newMap))
- 
+    const [newMap, previous] = this.playerMoveDown();
+    return this.set('map', this.toString(newMap)).set('previous', previous)
   }
 
   right() {
@@ -28,9 +27,8 @@ export default class Map extends Record({map: '', playerX: null, playerY: null})
       return this;
     }
 
-    const newMap = this.playerMoveRight();
-    return this.set("map", this.toString(newMap))
- 
+    const [newMap, previous] = this.playerMoveRight();
+    return this.set('map', this.toString(newMap)).set('previous', previous)
   }
 
   left() {
@@ -38,8 +36,8 @@ export default class Map extends Record({map: '', playerX: null, playerY: null})
       return this;
     }
 
-    const newMap = this.playerMoveLeft();
-    return this.set("map", this.toString(newMap))
+    const [newMap, previous] = this.playerMoveLeft();
+    return this.set('map', this.toString(newMap)).set('previous', previous)
   }
 
   solved() {
@@ -100,9 +98,7 @@ export default class Map extends Record({map: '', playerX: null, playerY: null})
     nowMap[playerPoint.y][playerPoint.x] = player.previousTile();
     nowMap[targetPoint.y][targetPoint.x] = TILES.PLAYER;
 
-    player.previous = target.toString();
-
-    return nowMap;
+    return [nowMap, target.toString()];
   }
 
 
@@ -112,12 +108,6 @@ export default class Map extends Record({map: '', playerX: null, playerY: null})
   leftPoint({x, y}) { return {x: x - 1, y} }
 
   _getPlayer() {
-    if (this.playerX == null || this.playerY == null) {
-      const playerP = this._findPoints(TILES.PLAYER);
-      this.set(playerY, playerP.y);
-      this.set(playerX, playerP.x);
-    }
-
     const points = this._findPoints(TILES.PLAYER);
     return points[0];
   }
@@ -146,7 +136,7 @@ export default class Map extends Record({map: '', playerX: null, playerY: null})
   createTile(raw) {
     switch(raw) {
       case TILES.EMPTY:       return new Empty(raw);
-      case TILES.PLAYER:      return new Player(raw);
+      case TILES.PLAYER:      return new Player(raw, this.previous);
       case TILES.BOX:         return new Box(raw);
       case TILES.RIGHT_PLACE: return new RightPlace(raw);
       case TILES.WALL:        return new Wall(raw);
@@ -169,10 +159,10 @@ class Tile {
 
 class Empty extends Tile { canEnter() { return true } }
 class Player extends Tile {
-  constructor() {
-    super();
+  constructor(raw, previous) {
+    super(raw);
     // TODO: 以前のタイルを保存する仕組み
-    this.previous = TILES.EMPTY;
+    this.previous = previous;
   }
   canEnter() { return false }
   previousTile() { return this.previous; }
